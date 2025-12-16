@@ -8,7 +8,6 @@ dist-firefox
 *.tgz
 *.xpi
 *.zip
-session-switcher-firefox.xpi
 session-swap-firefox.xpi
 
 # code coverage
