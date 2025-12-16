@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Session Switcher</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../output.css" />
+  </head>
+  <body
+    class="bg-[#fafafa] dark:bg-neutral-900 text-neutral-900 dark:text-neutral-50 w-[320px] antialiased selection:bg-blue-200 dark:selection:bg-blue-900 font-[Poppins]"
+  >
+    <div class="flex flex-col h-full">
+      <header
+        class="flex justify-between items-center p-3 border-b border-blue-100 dark:border-neutral-800 bg-blue-50/50 dark:bg-neutral-900 transition-colors"
+      >
+        <div>
+          <h1
+            class="text-sm font-semibold text-neutral-900 dark:text-white tracking-tight"
+          >
+            Session Switcher
+          </h1>
+          <p
+            id="current-domain"
+            class="text-[10px] text-blue-500/80 dark:text-neutral-400 truncate max-w-[150px] font-mono mt-0.5 opacity-90"
+          ></p>
+        </div>
+        <div class="flex gap-2 items-center">
+          <!-- Theme Toggle -->
+          <button
+            id="theme-btn"
+            class="icon-btn text-neutral-400 hover:text-neutral-600 dark:text-neutral-500 dark:hover:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800"
+            aria-label="Toggle Theme"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <circle cx="12" cy="12" r="5" />
+              <path d="M12 1v2" />
+              <path d="M12 21v2" />
+              <path d="M4.22 4.22l1.42 1.42" />
+              <path d="M18.36 18.36l1.42 1.42" />
+              <path d="M1 12h2" />
+              <path d="M21 12h2" />
+              <path d="M4.22 19.78l1.42-1.42" />
+              <path d="M18.36 5.64l1.42-1.42" />
+            </svg>
+          </button>
+
+          <!-- New Session (Reset) -->
+          <button
+            id="new-session-btn"
+            aria-label="New Session"
+            class="h-7 px-2.5 text-xs font-medium text-neutral-600 hover:text-blue-600 bg-white hover:bg-blue-50 dark:bg-neutral-800 dark:text-neutral-300 dark:hover:bg-neutral-700 dark:hover:text-white rounded-md transition-colors cursor-pointer flex flex-row items-center justify-center gap-1 whitespace-nowrap shadow-sm border border-neutral-200 dark:border-neutral-700"
+            title="Start a fresh session"
+          >
+            <span>+</span> <span>New</span>
+          </button>
+          <!-- Save Session -->
+          <button
+            id="add-session-btn"
+            aria-label="Save Session"
+            class="h-7 px-3 bg-blue-500 hover:bg-blue-600 text-white border-none transition-colors rounded-md text-xs font-medium shadow-sm flex flex-row items-center justify-center gap-1.5 cursor-pointer whitespace-nowrap"
+            title="Save current session"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="12"
+              height="12"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path
+                d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"
+              ></path>
+              <polyline points="17 21 17 13 7 13 7 21"></polyline>
+              <polyline points="7 3 7 8 15 8"></polyline>
+            </svg>
+            Save
+          </button>
+        </div>
+      </header>
+
+      <div
+        id="session-list"
+        class="flex-1 overflow-y-auto p-4 flex flex-col gap-2 min-h-[150px]"
+      >
+        <!-- Sessions will be injected here -->
+        <div class="empty-state text-center text-gray-400 text-xs py-8">
+          <p>No saved sessions for this domain.</p>
+        </div>
+      </div>
+
+      <!-- Add Session Modal/Input -->
+      <div
+        id="add-session-container"
+        class="border-t border-blue-100 dark:border-neutral-800 p-4 bg-blue-50/50 dark:bg-neutral-900 hidden"
+      >
+        <input
+          type="text"
+          id="new-session-name"
+          placeholder="Session Name (e.g. Personal)"
+          class="input-field mb-2 text-xs"
+        />
+        <div class="flex gap-2">
+          <button
+            id="save-session-confirm"
+            class="btn-primary w-full text-xs h-8"
+          >
+            Save Session
+          </button>
+          <button
+            id="cancel-session-save"
+            class="btn-secondary w-full text-xs h-8"
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+    <script src="./popup.js"></script>
+  </body>
+</html>

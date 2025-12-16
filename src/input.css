@@ -1,0 +1,28 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap");
+@import "tailwindcss";
+@variant dark (&:where(.dark, .dark *));
+
+@layer components {
+  body {
+    font-family: "Poppins", sans-serif;
+    @apply bg-[#fafafa] dark:bg-neutral-900 text-neutral-900 dark:text-neutral-50 transition-colors;
+  }
+  .btn-primary {
+    @apply bg-blue-500 text-white hover:bg-blue-600 transition-colors rounded-md px-4 py-2 text-xs font-medium cursor-pointer shadow-sm shadow-blue-500/20;
+  }
+  .btn-secondary {
+    @apply bg-white dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 border border-neutral-200 dark:border-neutral-700 hover:bg-neutral-50 dark:hover:bg-neutral-700 transition-colors rounded-md px-4 py-2 text-xs font-medium cursor-pointer;
+  }
+  .icon-btn {
+    @apply p-2 rounded-md text-neutral-400 hover:text-neutral-900 hover:bg-neutral-100 dark:hover:bg-neutral-800 dark:hover:text-white transition-colors cursor-pointer;
+  }
+  .input-field {
+    @apply w-full px-3 py-2 border border-neutral-200 dark:border-neutral-700 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 text-sm text-neutral-900 dark:text-neutral-100 placeholder-neutral-400 dark:placeholder-neutral-600 bg-white dark:bg-neutral-800 transition-shadow;
+  }
+  .card-base {
+    @apply bg-white dark:bg-neutral-800 border border-neutral-100 dark:border-neutral-700 rounded-md p-2.5 hover:border-neutral-300 dark:hover:border-neutral-600 transition-all cursor-move select-none;
+  }
+  .card-dragging {
+    @apply opacity-50 border-dashed border-blue-300 bg-blue-50 dark:bg-blue-900/20 dark:border-blue-700;
+  }
+}
