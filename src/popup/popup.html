@@ -135,6 +135,41 @@
         </div>
       </div>
     </div>
+
+    <!-- Confirmation Modal -->
+    <div
+      id="confirmation-modal"
+      class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50 p-4"
+    >
+      <div
+        class="bg-white dark:bg-neutral-800 rounded-lg shadow-lg p-4 w-full max-w-xs border border-neutral-200 dark:border-neutral-700"
+      >
+        <h3 class="text-sm font-semibold text-neutral-900 dark:text-white mb-2">
+          Session Exists
+        </h3>
+        <p class="text-xs text-neutral-600 dark:text-neutral-400 mb-4">
+          A session with the name "<span
+            id="confirm-session-name"
+            class="font-bold"
+          ></span
+          >" already exists. Do you want to replace it?
+        </p>
+        <div class="flex gap-2 justify-end">
+          <button
+            id="confirm-cancel-btn"
+            class="btn-secondary text-xs h-7 px-3"
+          >
+            Cancel
+          </button>
+          <button
+            id="confirm-overwrite-btn"
+            class="btn-primary text-xs h-7 px-3 bg-red-500 hover:bg-red-600 border-red-500 text-white"
+          >
+            Replace
+          </button>
+        </div>
+      </div>
+    </div>
     <script src="./popup.js"></script>
   </body>
 </html>

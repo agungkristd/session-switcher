@@ -31,6 +31,18 @@ document.addEventListener("DOMContentLoaded", async () => {
   ) as HTMLInputElement;
   const themeBtn = document.getElementById("theme-btn");
 
+  // Modal Elements
+  const confirmationModal = document.getElementById(
+    "confirmation-modal"
+  ) as HTMLElement;
+  const confirmSessionNameSpan = document.getElementById(
+    "confirm-session-name"
+  ) as HTMLElement;
+  const confirmCancelBtn = document.getElementById("confirm-cancel-btn");
+  const confirmOverwriteBtn = document.getElementById("confirm-overwrite-btn");
+
+  let pendingAction: (() => Promise<void>) | null = null;
+
   // State for Create vs Rename
   let isRenaming = false;
   let sessionToRenameIndex: number | null = null;
@@ -90,7 +102,17 @@ document.addEventListener("DOMContentLoaded", async () => {
       localStorage: storage,
     };
 
-    await saveSessionToStorage(domain!, newSession);
+    // Check if session exists to update, otherwise create new
+    const currentSessions = await loadSessions(domain!);
+    const existingIndex = currentSessions.findIndex((s) => s.name === name);
+
+    if (existingIndex !== -1) {
+      currentSessions[existingIndex] = newSession;
+      await updateSessionsInStorage(domain!, currentSessions);
+    } else {
+      await saveSessionToStorage(domain!, newSession);
+    }
+
     await setActiveSession(domain!, name);
     if (!skipRefresh) refresh();
   }
@@ -248,6 +270,56 @@ document.addEventListener("DOMContentLoaded", async () => {
     render(sessions, activeSessionName);
   }
 
+  async function handleSessionSubmission(name: string) {
+    if (!name) return;
+
+    const currentSessions = await loadSessions(domain!);
+    const existingIndex = currentSessions.findIndex((s) => s.name === name);
+
+    // Check for conflict
+    let needsConfirmation = false;
+
+    if (isRenaming && sessionToRenameIndex !== null) {
+      // If renaming to itself, do nothing/close
+      if (currentSessions[sessionToRenameIndex].name === name) {
+        resetFormState();
+        return;
+      }
+      // If renaming to another existing name
+      if (existingIndex !== -1) {
+        needsConfirmation = true;
+      }
+    } else {
+      // Logic for New Save: if name exists
+      if (existingIndex !== -1) {
+        needsConfirmation = true;
+      }
+    }
+
+    // Define the action to take
+    const action = async () => {
+      if (isRenaming) {
+        await performRename(name);
+      } else {
+        await handleSaveSession(name);
+        resetFormState(); // explicitly close/reset after save
+      }
+    };
+
+    if (needsConfirmation) {
+      pendingAction = action;
+      if (confirmSessionNameSpan) confirmSessionNameSpan.textContent = name;
+      if (confirmationModal) {
+        confirmationModal.classList.remove("hidden");
+        confirmationModal.classList.add("flex");
+      }
+      return;
+    }
+
+    // No conflict, proceed immediately
+    await action();
+  }
+
   function render(data: Session[], activeSessionName: string | null = null) {
     if (!sessionList) return;
     renderSessions(
@@ -288,15 +360,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   if (saveSessionConfirm) {
     saveSessionConfirm.addEventListener("click", async () => {
       const name = newSessionNameInput.value.trim();
-      if (!name) return;
-
-      if (isRenaming) {
-        await performRename(name);
-      } else {
-        await handleSaveSession(name);
-        addSessionContainer.classList.add("hidden");
-        newSessionNameInput.value = "";
-      }
+      await handleSessionSubmission(name);
     });
   }
 
@@ -305,16 +369,28 @@ document.addEventListener("DOMContentLoaded", async () => {
     newSessionNameInput.addEventListener("keydown", async (e) => {
       if (e.key === "Enter") {
         const name = newSessionNameInput.value.trim();
-        if (!name) return;
-
-        if (isRenaming) {
-          await performRename(name);
-        } else {
-          await handleSaveSession(name);
-          addSessionContainer.classList.add("hidden");
-          newSessionNameInput.value = "";
-        }
+        await handleSessionSubmission(name);
       }
+    });
+  }
+  // Modal Event Listeners
+  if (confirmCancelBtn) {
+    confirmCancelBtn.addEventListener("click", () => {
+      confirmationModal.classList.add("hidden");
+      confirmationModal.classList.remove("flex");
+      pendingAction = null;
+      newSessionNameInput.focus();
+    });
+  }
+
+  if (confirmOverwriteBtn) {
+    confirmOverwriteBtn.addEventListener("click", async () => {
+      if (pendingAction) {
+        await pendingAction();
+      }
+      confirmationModal.classList.add("hidden");
+      confirmationModal.classList.remove("flex");
+      pendingAction = null;
     });
   }
 });
