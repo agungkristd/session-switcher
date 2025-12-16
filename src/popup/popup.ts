@@ -77,7 +77,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     return `http${cookie.secure ? "s" : ""}://${domain}${cookie.path}`;
   }
 
-  async function handleSaveSession(name: string) {
+  async function handleSaveSession(name: string, skipRefresh = false) {
     // Capture cookies
     const cookies = await chrome.cookies.getAll({ url: tab.url });
     // Capture Storage
@@ -92,10 +92,16 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     await saveSessionToStorage(domain!, newSession);
     await setActiveSession(domain!, name);
-    refresh();
+    if (!skipRefresh) refresh();
   }
 
   async function handleRestoreSession(session: Session) {
+    // Auto-save: Before leaving the current session, update its state across the board
+    const activeSessionName = await getActiveSession(domain!);
+    if (activeSessionName && activeSessionName !== session.name) {
+      await handleSaveSession(activeSessionName, true);
+    }
+
     // Clear current
     await clearStorage(tab.id!);
     const currentCookies = await chrome.cookies.getAll({ url: tab.url });
@@ -217,6 +223,12 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   async function handleResetSite() {
+    // Auto-save current before clearing
+    const activeSessionName = await getActiveSession(domain!);
+    if (activeSessionName) {
+      await handleSaveSession(activeSessionName, true);
+    }
+
     await clearStorage(tab.id!);
     const currentCookies = await chrome.cookies.getAll({ url: tab.url });
     for (const cookie of currentCookies) {
