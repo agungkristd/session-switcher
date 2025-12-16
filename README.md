@@ -9,9 +9,29 @@ A browser extension to easily switch between multiple login sessions on the same
 - **Management:** Rename, reorder, and delete sessions.
 - **Private:** All data is stored locally in your browser.
 
-## Development
+## Installation
 
-This project uses [Bun](https://bun.com) for building and packaging.
+You can install the extension without building it yourself by downloading the latest release.
+
+### Chrome / Edge / Brave
+
+1.  Go to the [Releases](../../releases) page.
+2.  Download `chrome-extension.zip`.
+3.  Unzip the file.
+4.  Open your browser's extension management page (e.g., `chrome://extensions`).
+5.  Enable **Developer Mode**.
+6.  Click **Load Unpacked** and select the unzipped folder.
+
+### Firefox
+
+1.  Go to the [Releases](../../releases) page.
+2.  Download `session-switcher.xpi`.
+3.  Open Firefox and go to `about:addons`.
+4.  Click the gear icon and select **Install Add-on From File...** (or drag and drop the `.xpi` file).
+
+## Building from Source
+
+If you want to build the extension yourself or contribute, follow these steps.
 
 ### Prerequisites
 
