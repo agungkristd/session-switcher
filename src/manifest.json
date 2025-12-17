@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Session Swap",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "Switch between multiple login sessions easily.",
   "permissions": ["cookies", "storage", "scripting"],
   "host_permissions": ["<all_urls>"],

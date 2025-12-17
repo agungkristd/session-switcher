@@ -43,13 +43,21 @@ export class Modal {
 
   public show(
     title: string,
-    message: string,
+    message: string | HTMLElement,
     confirmLabel: string,
     onConfirm: () => Promise<void>,
     isDestructive = false
   ) {
     if (this.title) this.title.textContent = title;
-    if (this.message) this.message.innerHTML = message;
+
+    if (this.message) {
+      if (typeof message === "string") {
+        this.message.textContent = message;
+      } else if (message instanceof Node) {
+        this.message.innerHTML = "";
+        this.message.appendChild(message);
+      }
+    }
 
     if (this.confirmBtn) {
       this.confirmBtn.textContent = confirmLabel;

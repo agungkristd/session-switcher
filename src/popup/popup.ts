@@ -39,17 +39,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     "cancel-session-save"
   );
 
-  function escapeHtml(text: string): string {
-    const map: Record<string, string> = {
-      "&": "&amp;",
-      "<": "&lt;",
-      ">": "&gt;",
-      '"': "&quot;",
-      "'": "&#039;",
-    };
-    return text.replace(/[&<>"']/g, (m) => map[m]);
-  }
-
   // State for Create vs Rename
   let isRenaming = false;
   let sessionToRenameIndex: number | null = null;
@@ -328,14 +317,21 @@ document.addEventListener("DOMContentLoaded", async () => {
     };
 
     if (needsConfirmation) {
-      const safeName = escapeHtml(name);
-      modal.show(
-        "Session Exists",
-        `A session with the name <span class="font-bold">${safeName}</span> already exists. Do you want to replace it?`,
-        "Replace",
-        action,
-        true
+      const messageContainer = document.createElement("p");
+      messageContainer.appendChild(
+        document.createTextNode("A session with the name ")
       );
+
+      const boldName = document.createElement("span");
+      boldName.className = "font-bold";
+      boldName.textContent = name;
+      messageContainer.appendChild(boldName);
+
+      messageContainer.appendChild(
+        document.createTextNode(" already exists. Do you want to replace it?")
+      );
+
+      modal.show("Session Exists", messageContainer, "Replace", action, true);
       return;
     }
 
